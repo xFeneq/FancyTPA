@@ -34,19 +34,30 @@ public class CombatManager implements Listener {
     private void tag(Player player) {
         if (player.hasPermission(plugin.getConfig().getString("permissions.combat-bypass", "fancytpa.bypass.combat"))) return;
         combatLog.put(player.getUniqueId(), System.currentTimeMillis());
+
+        // Przerwij aktywną teleportację
+        if (plugin.getTpaManager().hasActiveTask(player)) {
+            plugin.getTpaManager().cancelTask(player);
+            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.teleport-cancelled")));
+        }
     }
 
     public boolean isInCombat(Player player) {
         if (player.hasPermission(plugin.getConfig().getString("permissions.combat-bypass", "fancytpa.bypass.combat"))) return false;
-
         long combatTime = plugin.getConfig().getInt("settings.combat-timer", 15) * 1000L;
         if (!combatLog.containsKey(player.getUniqueId())) return false;
-
         long lastHit = combatLog.get(player.getUniqueId());
         if (System.currentTimeMillis() - lastHit > combatTime) {
             combatLog.remove(player.getUniqueId());
             return false;
         }
         return true;
+    }
+
+    public long getRemainingCombatTime(Player player) {
+        if (!combatLog.containsKey(player.getUniqueId())) return 0;
+        long combatTime = plugin.getConfig().getInt("settings.combat-timer", 15) * 1000L;
+        long lastHit = combatLog.get(player.getUniqueId());
+        return (combatTime - (System.currentTimeMillis() - lastHit)) / 1000L;
     }
 }

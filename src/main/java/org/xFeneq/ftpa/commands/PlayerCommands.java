@@ -21,29 +21,54 @@ public class PlayerCommands implements CommandExecutor {
         if (!(sender instanceof Player)) return true;
         Player player = (Player) sender;
 
-        // --- NASZ WŁASNY ANTY-LOGOUT ---
         if (plugin.getCombatManager().isInCombat(player)) {
-            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.combat-stop", "&cYou are in combat! Wait before using commands.")));
+            String time = String.valueOf(plugin.getCombatManager().getRemainingCombatTime(player));
+            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.combat-stop").replace("{time}", time)));
             return true;
         }
 
-        if (args.length != 1) {
-            player.sendMessage(ColorUtil.color("&cUsage: /" + label + " <player>"));
+        if (args.length == 0) {
+            player.sendMessage(ColorUtil.color("&cUsage: /" + label + " <player> [or] /tpa ignore <player>"));
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase("ignore") && args.length == 2) {
+            Player targetIgnore = Bukkit.getPlayer(args[1]);
+            if (targetIgnore == null) {
+                player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.player-offline")));
+                return true;
+            }
+            boolean ignored = plugin.getTpaManager().toggleIgnore(player, targetIgnore);
+            if (ignored) {
+                player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.ignore-added").replace("{player}", targetIgnore.getName())));
+            } else {
+                player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.ignore-removed").replace("{player}", targetIgnore.getName())));
+            }
             return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.player-offline", "&cOffline!")));
+            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.player-offline")));
+            return true;
+        }
+
+        if (player.equals(target)) {
+            player.sendMessage(ColorUtil.color("&cYou cannot teleport to yourself!"));
+            return true;
+        }
+
+        if (plugin.getTpaManager().isIgnoring(target, player)) {
+            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.ignored-by-target")));
             return true;
         }
 
         if (command.getName().equalsIgnoreCase("tpa")) {
             plugin.getTpaManager().sendTpaRequest(player, target);
-            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.request-sent", "&aSent!").replace("{player}", target.getName())));
+            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.request-sent").replace("{player}", target.getName())));
         } else if (command.getName().equalsIgnoreCase("tpahere")) {
             plugin.getTpaManager().sendTpaHereRequest(player, target);
-            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.request-sent", "&aSent!").replace("{player}", target.getName())));
+            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.request-sent").replace("{player}", target.getName())));
         }
 
         return true;

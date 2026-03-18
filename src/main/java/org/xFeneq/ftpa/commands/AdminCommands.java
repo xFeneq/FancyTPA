@@ -1,6 +1,7 @@
 package org.xFeneq.ftpa.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,69 +21,116 @@ public class AdminCommands implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) return true;
-        Player admin = (Player) sender;
+        Player player = (Player) sender;
 
-        // Handling /tp <player>
         if (command.getName().equalsIgnoreCase("tp")) {
-            if (!checkAdminPerm(admin, "permissions.admin-tp")) return true;
-            if (args.length < 1) return false;
+            if (!player.hasPermission("ftpa.admin.tp")) return true;
 
-            Player target = Bukkit.getPlayer(args[0]);
-            if (target == null) {
-                admin.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.player-offline")));
-                return true;
-            }
-
-            admin.teleport(target.getLocation());
-            admin.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.admin-tp-success").replace("{target}", target.getName())));
-            return true;
-        }
-
-        // Handling /tphere <player/all> [dimension]
-        if (command.getName().equalsIgnoreCase("tphere")) {
-            if (!checkAdminPerm(admin, "permissions.admin-tphere")) return true;
-            if (args.length < 1) return false;
-
-            // Summon all players
-            if (args[0].equalsIgnoreCase("all")) {
-                World world = (args.length == 2) ? Bukkit.getWorld(args[1]) : null;
-                int count = 0;
-
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (p.equals(admin)) continue;
-                    if (world != null && !p.getWorld().equals(world)) continue;
-
-                    p.teleport(admin.getLocation());
-                    count++;
+            // /tp <player>
+            if (args.length == 1) {
+                Player target = Bukkit.getPlayer(args[0]);
+                if (target == null) {
+                    player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.player-offline")));
+                    return true;
                 }
-
-                String msg = (world == null) ? "messages.admin-tphere-all" : "messages.admin-tphere-dimension";
-                admin.sendMessage(ColorUtil.color(plugin.getConfig().getString(msg)
-                        .replace("{count}", String.valueOf(count))
-                        .replace("{world}", world != null ? world.getName() : "")));
+                player.teleport(target);
+                player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.admin-tp-success").replace("{target}", target.getName())));
                 return true;
             }
-
-            // Summon single player
+            // /tp <player> <target>
+            else if (args.length == 2) {
+                Player p1 = Bukkit.getPlayer(args[0]);
+                Player p2 = Bukkit.getPlayer(args[1]);
+                if (p1 == null || p2 == null) {
+                    player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.player-offline")));
+                    return true;
+                }
+                p1.teleport(p2);
+                player.sendMessage(ColorUtil.color("&aTeleported " + p1.getName() + " to " + p2.getName()));
+                return true;
+            }
+            // /tp <x> <y> <z>
+            else if (args.length == 3) {
+                Location loc = parseLocation(player.getLocation(), args[0], args[1], args[2]);
+                if (loc == null) {
+                    player.sendMessage(ColorUtil.color("&cInvalid coordinates."));
+                    return true;
+                }
+                player.teleport(loc);
+                player.sendMessage(ColorUtil.color("&aTeleported to coordinates."));
+                return true;
+            }
+            // /tp <player> <x> <y> <z>
+            else if (args.length == 4) {
+                Player target = Bukkit.getPlayer(args[0]);
+                if (target == null) {
+                    player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.player-offline")));
+                    return true;
+                }
+                Location loc = parseLocation(target.getLocation(), args[1], args[2], args[3]);
+                if (loc == null) {
+                    player.sendMessage(ColorUtil.color("&cInvalid coordinates."));
+                    return true;
+                }
+                target.teleport(loc);
+                player.sendMessage(ColorUtil.color("&aTeleported " + target.getName() + " to coordinates."));
+                return true;
+            } else {
+                player.sendMessage(ColorUtil.color("&cUsage: /tp <player> or /tp <x> <y> <z> or /tp <player> <x> <y> <z>"));
+                return true;
+            }
+        }
+        else if (command.getName().equalsIgnoreCase("tphere")) {
+            if (!player.hasPermission("ftpa.admin.tphere")) return true;
+            if (args.length != 1) return true;
             Player target = Bukkit.getPlayer(args[0]);
-            if (target == null) {
-                admin.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.player-offline")));
-                return true;
+            if (target == null) return true;
+            target.teleport(player);
+            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.admin-tphere-success").replace("{target}", target.getName())));
+        }
+        else if (command.getName().equalsIgnoreCase("tpall")) {
+            if (!player.hasPermission("ftpa.admin.tpall")) return true;
+            Player destination = player;
+            World sourceWorld = null;
+
+            // /tpall <nick>
+            if (args.length >= 1) {
+                destination = Bukkit.getPlayer(args[0]);
+                if (destination == null) {
+                    player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.player-offline")));
+                    return true;
+                }
+            }
+            // /tpall <nick> <dimension>
+            if (args.length == 2) {
+                sourceWorld = Bukkit.getWorld(args[1]);
+                if (sourceWorld == null) {
+                    player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.world-not-found").replace("{world}", args[1])));
+                    return true;
+                }
             }
 
-            target.teleport(admin.getLocation());
-            admin.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.admin-tphere-success").replace("{target}", target.getName())));
+            int count = 0;
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (p.equals(destination)) continue;
+                if (sourceWorld != null && !p.getWorld().equals(sourceWorld)) continue;
+                p.teleport(destination);
+                count++;
+            }
+            player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.admin-tpall-success").replace("{count}", String.valueOf(count))));
         }
 
         return true;
     }
 
-    private boolean checkAdminPerm(Player player, String configPath) {
-        String perm = plugin.getConfig().getString(configPath);
-        if (player.hasPermission(perm) || player.hasPermission(plugin.getConfig().getString("permissions.admin-all"))) {
-            return true;
+    private Location parseLocation(Location base, String xStr, String yStr, String zStr) {
+        try {
+            double x = xStr.startsWith("~") ? base.getX() + (xStr.length() > 1 ? Double.parseDouble(xStr.substring(1)) : 0) : Double.parseDouble(xStr);
+            double y = yStr.startsWith("~") ? base.getY() + (yStr.length() > 1 ? Double.parseDouble(yStr.substring(1)) : 0) : Double.parseDouble(yStr);
+            double z = zStr.startsWith("~") ? base.getZ() + (zStr.length() > 1 ? Double.parseDouble(zStr.substring(1)) : 0) : Double.parseDouble(zStr);
+            return new Location(base.getWorld(), x, y, z, base.getYaw(), base.getPitch());
+        } catch (NumberFormatException e) {
+            return null;
         }
-        player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.no-permission").replace("{perm}", perm)));
-        return false;
     }
 }

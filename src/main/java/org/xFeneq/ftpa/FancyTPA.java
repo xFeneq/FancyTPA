@@ -15,22 +15,28 @@ public final class FancyTPA extends JavaPlugin {
         this.tpaManager = new TpaManager(this);
         this.combatManager = new CombatManager(this);
 
-        // Rejestracja eventu walki
         getServer().getPluginManager().registerEvents(combatManager, this);
+
+        TpaTabCompleter tabCompleter = new TpaTabCompleter();
 
         PlayerCommands playerCommands = new PlayerCommands(this);
         getCommand("tpa").setExecutor(playerCommands);
+        getCommand("tpa").setTabCompleter(tabCompleter);
         getCommand("tpahere").setExecutor(playerCommands);
+        getCommand("tpahere").setTabCompleter(tabCompleter);
         getCommand("tpaccept").setExecutor(new TpAcceptCommand(this));
         getCommand("tpdeny").setExecutor(new TpDenyCommand(this));
         getCommand("back").setExecutor(new BackCommand(this));
 
-        // TabCompleter
-        TpaTabCompleter tabCompleter = new TpaTabCompleter();
-        getCommand("tpa").setTabCompleter(tabCompleter);
-        getCommand("tpahere").setTabCompleter(tabCompleter);
+        AdminCommands adminCommands = new AdminCommands(this);
+        getCommand("tp").setExecutor(adminCommands);
+        getCommand("tp").setTabCompleter(tabCompleter);
+        getCommand("tphere").setExecutor(adminCommands);
+        getCommand("tphere").setTabCompleter(tabCompleter);
+        getCommand("tpall").setExecutor(adminCommands);
+        getCommand("tpall").setTabCompleter(tabCompleter);
 
-        getLogger().info("FancyTPA enabled with internal Combat Tag!");
+        getLogger().info("FancyTPA v2.0 enabled!");
     }
 
     public TpaManager getTpaManager() { return tpaManager; }

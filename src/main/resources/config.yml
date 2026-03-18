@@ -16,7 +16,7 @@ settings:
   # This works with our internal system, no external plugins needed!
   combat-timer: 15
 
-  # Should the teleportation be cancelled if the player moves?
+  # Should the teleportation be cancelled if the player moves or gets hit?
   cancel-on-move: true
 
 # ------------------------------------------------------
@@ -34,7 +34,7 @@ commands:
     enabled: true
   back:
     enabled: true
-  tp-admin: # Admin /tp and /tphere
+  tp-admin: # Admin /tp, /tphere, and /tpall
     enabled: true
 
 # ------------------------------------------------------
@@ -45,6 +45,7 @@ permissions:
   admin-all: "ftpa.admin.*"
   admin-tp: "ftpa.admin.tp"
   admin-tphere: "ftpa.admin.tphere"
+  admin-tpall: "ftpa.admin.tpall"
 
   # Player permissions
   player-all: "ftpa.player.*"
@@ -86,9 +87,9 @@ messages:
   command-disabled: "&cThis command is currently disabled."
   player-offline: "&cPlayer is offline or does not exist."
   combat-stop: "&8[&6&l!&8] &cCommand blocked! You are in combat for {time}s."
-  teleport-cancelled: "&cTeleportation cancelled! You moved."
+  teleport-cancelled: "&cTeleportation cancelled! You moved or entered combat."
   world-not-found: "&cWorld &f{world} &cnot found."
-  no-back-location: "&cNo previous location found or it has expired (1 min)."
+  no-back-location: "&cNo previous location found or it has expired."
 
   # Success Messages
   request-sent: "&7Request sent to &f{player}&7."
@@ -96,9 +97,9 @@ messages:
   teleport-instant: "&aTeleportation was instant (no acceptance required)."
   back-success: "&aReturned to your previous location!"
 
-  # Timer Messages (can be used for ActionBars or Chat)
-  teleporting-timer: "&eTeleporting in &6{time}s&e... Do not move!"
-  back-timer: "&eReturning in &6{time}s&e... Do not move!"
+  # Timer Messages (Used for ActionBars)
+  teleporting-actionbar: "&eTeleporting in &6{time}s&e... Do not move!"
+  back-actionbar: "&eReturning in &6{time}s&e... Do not move!"
 
   # Interactive Chat Request
   request-header: "&8&m----------------------------------------"
@@ -109,6 +110,12 @@ messages:
   accept-hover: "&7Click to &aaccept &7teleport request"
   deny-hover: "&7Click to &cdeny &7teleport request"
 
+  # Ignore System Messages (/tpa ignore <player>)
+  ignore-added: "&aYou are now ignoring TPA requests from &f{player}&a."
+  ignore-removed: "&aYou are no longer ignoring &f{player}&a."
+  ignored-by-target: "&cYou cannot send requests to this player."
+
   # Admin Specific
   admin-tp-success: "&bFancyTPA &8» &7Teleported to &f{target}&7."
   admin-tphere-success: "&bFancyTPA &8» &7Summoned &f{target} &7to your location."
+  admin-tpall-success: "&bFancyTPA &8» &7Summoned &f{count} &7players."
