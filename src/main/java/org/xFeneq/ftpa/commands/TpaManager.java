@@ -36,22 +36,21 @@ public class TpaManager {
     }
 
     private void sendInteractiveMessage(Player target, Player sender, String text) {
-        String header = ColorUtil.color(plugin.getConfig().getString("messages.request-header", "&8&m----------------------------------------"));
-        String footer = ColorUtil.color(plugin.getConfig().getString("messages.request-footer", "&8&m----------------------------------------"));
+        String header = ColorUtil.color(plugin.getConfig().getString("messages.request-header", "&8&m------------"));
+        String footer = ColorUtil.color(plugin.getConfig().getString("messages.request-footer", "&8&m------------"));
 
         target.sendMessage(header);
         target.sendMessage(ColorUtil.color(" &6» &e" + sender.getName() + " &7" + text));
-        target.sendMessage("");
 
-        TextComponent accept = new TextComponent(ColorUtil.color(plugin.getConfig().getString("messages.accept-button", "&a&lAccept")));
+        TextComponent accept = new TextComponent(ColorUtil.color(plugin.getConfig().getString("messages.accept-button", "&a&l[ACCEPT]")));
         accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept " + sender.getName()));
-        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ColorUtil.color(plugin.getConfig().getString("messages.accept-hover", "&7Click to accept")))));
+        accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ColorUtil.color("&7Click to accept request"))));
 
-        TextComponent deny = new TextComponent(ColorUtil.color(plugin.getConfig().getString("messages.deny-button", "&c&lDeny")));
+        TextComponent deny = new TextComponent(ColorUtil.color(plugin.getConfig().getString("messages.deny-button", "&c&l[DENY]")));
         deny.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny " + sender.getName()));
-        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ColorUtil.color(plugin.getConfig().getString("messages.deny-hover", "&7Click to deny")))));
+        deny.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ColorUtil.color("&7Click to deny request"))));
 
-        TextComponent line = new TextComponent("          ");
+        TextComponent line = new TextComponent("  ");
         line.addExtra(accept);
         line.addExtra(new TextComponent("    "));
         line.addExtra(deny);

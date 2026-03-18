@@ -1,15 +1,28 @@
+# ======================================================
 # FancyTPA - Configuration File
-# Version: 1.0
+# ======================================================
 
-# General settings for teleportation
+# ------------------------------------------------------
+# General Teleportation Settings
+# ------------------------------------------------------
 settings:
-  # Time in seconds before teleportation occurs
+  # Time in seconds before /tpa or /tpahere occurs
   teleport-delay: 5
+
+  # Time in seconds before /back teleportation occurs
+  back-delay: 10
+
+  # Combat Tag duration in seconds (Command block after hitting/getting hit)
+  # This works with our internal system, no external plugins needed!
+  combat-timer: 15
+
   # Should the teleportation be cancelled if the player moves?
   cancel-on-move: true
 
-# Commands toggle section
-# WARNING: Disabling tpaccept will make /tpa instant (NOT RECOMMENDED)
+# ------------------------------------------------------
+# Commands Toggle Section
+# Enable or disable specific features of the plugin
+# ------------------------------------------------------
 commands:
   tpa:
     enabled: true
@@ -19,69 +32,83 @@ commands:
     enabled: true
   tpdeny:
     enabled: true
-  tphere:
+  back:
     enabled: true
-  tp-overlay:
+  tp-admin: # Admin /tp and /tphere
     enabled: true
 
-# Custom permissions for all commands
+# ------------------------------------------------------
+# Permissions Configuration
+# ------------------------------------------------------
 permissions:
+  # Admin permissions
   admin-all: "ftpa.admin.*"
   admin-tp: "ftpa.admin.tp"
   admin-tphere: "ftpa.admin.tphere"
+
+  # Player permissions
   player-all: "ftpa.player.*"
   player-tpa: "ftpa.player.tpa"
   player-tpahere: "ftpa.player.tpahere"
   player-tpaccept: "ftpa.player.tpaccept"
+  player-back: "ftpa.player.back"
 
-# Visual and Sound effects
+  # Bypass permission for Combat Tag
+  combat-bypass: "fancytpa.bypass.combat"
+
+# ------------------------------------------------------
+# Visual and Sound Effects
+# ------------------------------------------------------
 effects:
+  # General toggle for all effects
   enabled: true
-  # Sound played during teleportation
-  # Use official Spigot Sound names (e.g., ENTITY_ENDERMAN_TELEPORT)
+
+  # Enable the spinning circle effect during teleport delay
+  circle-enabled: true
+
+  # Sound played upon successful teleportation
+  # Use official Spigot names: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
   sound: "ENTITY_ENDERMAN_TELEPORT"
-  # Particle type used for implosion/explosion
-  # Use official Spigot Particle names (e.g., PORTAL)
+
+  # Particle type used for general effects
+  # Use official Spigot names: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
   particle-type: "PORTAL"
   particle-amount: 50
 
-# All messages support color codes using '&'
+# ------------------------------------------------------
+# Plugin Messages (Supports '&' color codes)
+# ------------------------------------------------------
 messages:
   prefix: "&b&lFancyTPA &8» "
+
+  # Errors and Restrictions
   no-permission: "&cNo permission! ({perm})"
   command-disabled: "&cThis command is currently disabled."
   player-offline: "&cPlayer is offline or does not exist."
+  combat-stop: "&8[&6&l!&8] &cCommand blocked! You are in combat for {time}s."
+  teleport-cancelled: "&cTeleportation cancelled! You moved."
+  world-not-found: "&cWorld &f{world} &cnot found."
+  no-back-location: "&cNo previous location found or it has expired (1 min)."
+
+  # Success Messages
   request-sent: "&7Request sent to &f{player}&7."
   teleport-success: "&aTeleported successfully!"
   teleport-instant: "&aTeleportation was instant (no acceptance required)."
+  back-success: "&aReturned to your previous location!"
 
-  # Timer messages (shown on ActionBar)
+  # Timer Messages (can be used for ActionBars or Chat)
   teleporting-timer: "&eTeleporting in &6{time}s&e... Do not move!"
-  teleport-cancelled: "&cTeleportation cancelled! You moved."
+  back-timer: "&eReturning in &6{time}s&e... Do not move!"
 
-  # Interactive Chat Request (The one from the screenshot)
+  # Interactive Chat Request
   request-header: "&8&m----------------------------------------"
   request-footer: "&8&m----------------------------------------"
+  request-text: " &6» &e{player} &7wants to teleport to you!"
   accept-button: "&a&l[ACCEPT]"
   deny-button: "&c&l[DENY]"
   accept-hover: "&7Click to &aaccept &7teleport request"
   deny-hover: "&7Click to &cdeny &7teleport request"
 
-  # Admin specific messages
+  # Admin Specific
   admin-tp-success: "&bFancyTPA &8» &7Teleported to &f{target}&7."
   admin-tphere-success: "&bFancyTPA &8» &7Summoned &f{target} &7to your location."
-  admin-tphere-all: "&bFancyTPA &8» &7Summoned all players ({count}) to your location."
-  world-not-found: "&cWorld &f{world} &cnot found."
-  settings:
-    teleport-delay: 5
-    back-delay: 10
-    cancel-on-move: true
-
-  effects:
-    enabled: true
-    circle-enabled: true # Set to false to disable circle particles
-    particle-type: "PORTAL"
-    sound: "ENTITY_ENDERMAN_TELEPORT"
-
-  messages:
-    combat-stop: "&cCommand blocked! You are in combat."
