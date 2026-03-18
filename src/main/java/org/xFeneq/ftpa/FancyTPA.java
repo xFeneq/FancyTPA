@@ -1,11 +1,7 @@
 package org.xFeneq.ftpa;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.xFeneq.ftpa.commands.AdminCommands;
-import org.xFeneq.ftpa.commands.PlayerCommands;
-import org.xFeneq.ftpa.commands.TpAcceptCommand;
-import org.xFeneq.ftpa.commands.TpDenyCommand;
-import org.xFeneq.ftpa.commands.TpaManager;
+import org.xFeneq.ftpa.commands.*;
 
 public final class FancyTPA extends JavaPlugin {
 
@@ -17,15 +13,23 @@ public final class FancyTPA extends JavaPlugin {
         this.tpaManager = new TpaManager(this);
 
         PlayerCommands playerCommands = new PlayerCommands(this);
+        AdminCommands adminCommands = new AdminCommands(this);
+        TpaTabCompleter tabCompleter = new TpaTabCompleter();
+
         getCommand("tpa").setExecutor(playerCommands);
+        getCommand("tpa").setTabCompleter(tabCompleter);
+
         getCommand("tpahere").setExecutor(playerCommands);
+        getCommand("tpahere").setTabCompleter(tabCompleter);
 
         getCommand("tpaccept").setExecutor(new TpAcceptCommand(this));
         getCommand("tpdeny").setExecutor(new TpDenyCommand(this));
 
-        AdminCommands adminCommands = new AdminCommands(this);
         getCommand("tp").setExecutor(adminCommands);
+        getCommand("tp").setTabCompleter(tabCompleter);
+
         getCommand("tphere").setExecutor(adminCommands);
+        getCommand("tphere").setTabCompleter(tabCompleter);
 
         getLogger().info("FancyTPA enabled successfully!");
     }

@@ -72,3 +72,16 @@ messages:
   admin-tphere-success: "&bFancyTPA &8» &7Summoned &f{target} &7to your location."
   admin-tphere-all: "&bFancyTPA &8» &7Summoned all players ({count}) to your location."
   world-not-found: "&cWorld &f{world} &cnot found."
+  settings:
+    teleport-delay: 5
+    back-delay: 10
+    cancel-on-move: true
+
+  effects:
+    enabled: true
+    circle-enabled: true # Set to false to disable circle particles
+    particle-type: "PORTAL"
+    sound: "ENTITY_ENDERMAN_TELEPORT"
+
+  messages:
+    combat-stop: "&cCommand blocked! You are in combat."

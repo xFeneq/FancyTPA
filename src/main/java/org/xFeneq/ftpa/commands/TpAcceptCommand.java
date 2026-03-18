@@ -54,34 +54,38 @@ public class TpAcceptCommand implements CommandExecutor {
 
     private void startTeleportTimer(Player requester, Player target) {
         int delay = plugin.getConfig().getInt("settings.teleport-delay");
-        boolean cancelOnMove = plugin.getConfig().getBoolean("settings.cancel-on-move");
 
         new BukkitRunnable() {
             int timeLeft = delay;
-            final Location startLoc = requester.getLocation();
+            double angle = 0;
 
             @Override
             public void run() {
-                if (cancelOnMove && (startLoc.distance(requester.getLocation()) > 0.1)) {
-                    requester.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.teleport-cancelled")));
-                    this.cancel();
-                    return;
-                }
-
                 if (timeLeft <= 0) {
                     executeFinalTeleport(requester, target);
                     this.cancel();
                     return;
                 }
 
-                String msg = plugin.getConfig().getString("messages.teleporting-timer").replace("{time}", String.valueOf(timeLeft));
-                requester.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ColorUtil.color(msg)));
+                // Circle Effect logic
+                if (plugin.getConfig().getBoolean("effects.circle-enabled", true)) {
+                    Location loc = requester.getLocation();
+                    for (int i = 0; i < 20; i++) {
+                        double x = 0.8 * Math.cos(i * Math.PI / 10);
+                        double z = 0.8 * Math.sin(i * Math.PI / 10);
+                        loc.add(x, 0.1, z);
+                        loc.getWorld().spawnParticle(org.bukkit.Particle.VILLAGER_HAPPY, loc, 1, 0, 0, 0, 0);
+                        loc.subtract(x, 0.1, z);
+                    }
+                }
+
                 timeLeft--;
             }
         }.runTaskTimer(plugin, 0L, 20L);
     }
 
     private void executeFinalTeleport(Player requester, Player target) {
+        plugin.getTpaManager().setLastLocation(requester);
         Location startPos = requester.getLocation().clone();
         Location endPos = target.getLocation().clone();
 
