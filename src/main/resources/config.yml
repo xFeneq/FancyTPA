@@ -1,0 +1,74 @@
+# FancyTPA - Configuration File
+# Version: 1.0
+
+# General settings for teleportation
+settings:
+  # Time in seconds before teleportation occurs
+  teleport-delay: 5
+  # Should the teleportation be cancelled if the player moves?
+  cancel-on-move: true
+
+# Commands toggle section
+# WARNING: Disabling tpaccept will make /tpa instant (NOT RECOMMENDED)
+commands:
+  tpa:
+    enabled: true
+  tpahere:
+    enabled: true
+  tpaccept:
+    enabled: true
+  tpdeny:
+    enabled: true
+  tphere:
+    enabled: true
+  tp-overlay:
+    enabled: true
+
+# Custom permissions for all commands
+permissions:
+  admin-all: "ftpa.admin.*"
+  admin-tp: "ftpa.admin.tp"
+  admin-tphere: "ftpa.admin.tphere"
+  player-all: "ftpa.player.*"
+  player-tpa: "ftpa.player.tpa"
+  player-tpahere: "ftpa.player.tpahere"
+  player-tpaccept: "ftpa.player.tpaccept"
+
+# Visual and Sound effects
+effects:
+  enabled: true
+  # Sound played during teleportation
+  # Use official Spigot Sound names (e.g., ENTITY_ENDERMAN_TELEPORT)
+  sound: "ENTITY_ENDERMAN_TELEPORT"
+  # Particle type used for implosion/explosion
+  # Use official Spigot Particle names (e.g., PORTAL)
+  particle-type: "PORTAL"
+  particle-amount: 50
+
+# All messages support color codes using '&'
+messages:
+  prefix: "&b&lFancyTPA &8» "
+  no-permission: "&cNo permission! ({perm})"
+  command-disabled: "&cThis command is currently disabled."
+  player-offline: "&cPlayer is offline or does not exist."
+  request-sent: "&7Request sent to &f{player}&7."
+  teleport-success: "&aTeleported successfully!"
+  teleport-instant: "&aTeleportation was instant (no acceptance required)."
+
+  # Timer messages (shown on ActionBar)
+  teleporting-timer: "&eTeleporting in &6{time}s&e... Do not move!"
+  teleport-cancelled: "&cTeleportation cancelled! You moved."
+
+  # Interactive Chat Request (The one from the screenshot)
+  request-header: "&8&m----------------------------------------"
+  request-footer: "&8&m----------------------------------------"
+  accept-button: "&a&l[ACCEPT]"
+  deny-button: "&c&l[DENY]"
+  accept-hover: "&7Click to &aaccept &7teleport request"
+  deny-hover: "&7Click to &cdeny &7teleport request"
+
+  # Admin specific messages
+  admin-tp-success: "&bFancyTPA &8» &7Teleported to &f{target}&7."
+  admin-tphere-success: "&bFancyTPA &8» &7Summoned &f{target} &7to your location."
+  admin-tphere-all: "&bFancyTPA &8» &7Summoned all players ({count}) to your location."
+  world-not-found: "&cWorld &f{world} &cnot found."

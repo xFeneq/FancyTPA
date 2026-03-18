@@ -1,0 +1,5 @@
+name: FancyTPA
+version: '1.0-SNAPSHOT'
+main: org.xFeneq.ftpa.FancyTPA
+api-version: '1.19'
+authors: [ xFeneq ]
