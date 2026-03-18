@@ -29,7 +29,6 @@ public class TpAcceptCommand implements CommandExecutor {
         if (!(sender instanceof Player)) return true;
         Player target = (Player) sender;
 
-        // Check permission from config
         String perm = plugin.getConfig().getString("permissions.player-tpaccept");
         if (!target.hasPermission(perm) && !target.hasPermission(plugin.getConfig().getString("permissions.player-all"))) {
             target.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.no-permission").replace("{perm}", perm)));
@@ -63,8 +62,7 @@ public class TpAcceptCommand implements CommandExecutor {
 
             @Override
             public void run() {
-                // Check if player moved
-                if (cancelOnMove && (startLoc.getX() != requester.getLocation().getX() || startLoc.getZ() != requester.getLocation().getZ())) {
+                if (cancelOnMove && (startLoc.distance(requester.getLocation()) > 0.1)) {
                     requester.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.teleport-cancelled")));
                     this.cancel();
                     return;
@@ -76,45 +74,49 @@ public class TpAcceptCommand implements CommandExecutor {
                     return;
                 }
 
-                // Show time on Action Bar
                 String msg = plugin.getConfig().getString("messages.teleporting-timer").replace("{time}", String.valueOf(timeLeft));
                 requester.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ColorUtil.color(msg)));
-
                 timeLeft--;
             }
         }.runTaskTimer(plugin, 0L, 20L);
     }
 
     private void executeFinalTeleport(Player requester, Player target) {
-        Location start = requester.getLocation().add(0, 1, 0);
-        Location end = target.getLocation().add(0, 1, 0);
+        Location startPos = requester.getLocation().clone();
+        Location endPos = target.getLocation().clone();
 
-        // Teleport based on request type (TPA or TPAHERE)
         if (plugin.getTpaManager().isTpaHere(requester.getUniqueId())) {
             target.teleport(requester.getLocation());
         } else {
             requester.teleport(target.getLocation());
         }
 
-        // Play Visual Effects
         if (plugin.getConfig().getBoolean("effects.enabled")) {
-            playEffects(start, end);
+            playAdvancedEffects(startPos, endPos);
         }
 
         requester.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.teleport-success")));
         plugin.getTpaManager().removeRequest(requester.getUniqueId());
     }
 
-    private void playEffects(Location start, Location end) {
-        Particle p = Particle.valueOf(plugin.getConfig().getString("effects.particle-type"));
-        Sound s = Sound.valueOf(plugin.getConfig().getString("effects.sound"));
+    private void playAdvancedEffects(Location start, Location end) {
+        Particle p = Particle.valueOf(plugin.getConfig().getString("effects.particle-type", "PORTAL"));
+        Sound s = Sound.valueOf(plugin.getConfig().getString("effects.sound", "ENTITY_ENDERMAN_TELEPORT"));
 
-        // Implosion at start
-        start.getWorld().spawnParticle(p, start, 50, 0.5, 0.5, 0.5, 0.1);
+        for (int i = 0; i < 50; i++) {
+            double x = (Math.random() - 0.5) * 2;
+            double y = Math.random() * 2;
+            double z = (Math.random() - 0.5) * 2;
+            start.getWorld().spawnParticle(p, start.clone().add(x, y, z), 0, -x, -y, -z, 0.1);
+        }
         start.getWorld().playSound(start, s, 1.0f, 1.0f);
 
-        // Explosion at destination
-        end.getWorld().spawnParticle(p, end, 50, 0.5, 0.5, 0.5, 0.1);
+        for (int i = 0; i < 50; i++) {
+            double dx = (Math.random() - 0.5);
+            double dy = (Math.random() - 0.5);
+            double dz = (Math.random() - 0.5);
+            end.getWorld().spawnParticle(p, end.clone().add(0, 1, 0), 0, dx, dy, dz, 0.2);
+        }
         end.getWorld().playSound(end, s, 1.0f, 1.0f);
     }
 }

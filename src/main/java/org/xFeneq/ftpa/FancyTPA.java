@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.xFeneq.ftpa.commands.AdminCommands;
 import org.xFeneq.ftpa.commands.PlayerCommands;
 import org.xFeneq.ftpa.commands.TpAcceptCommand;
+import org.xFeneq.ftpa.commands.TpDenyCommand;
 import org.xFeneq.ftpa.TpaManager;
 
 public final class FancyTPA extends JavaPlugin {
@@ -20,6 +21,7 @@ public final class FancyTPA extends JavaPlugin {
         getCommand("tpahere").setExecutor(playerCommands);
 
         getCommand("tpaccept").setExecutor(new TpAcceptCommand(this));
+        getCommand("tpdeny").setExecutor(new TpDenyCommand(this));
 
         AdminCommands adminCommands = new AdminCommands(this);
         getCommand("tp").setExecutor(adminCommands);

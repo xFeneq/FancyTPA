@@ -1,5 +1,26 @@
 name: FancyTPA
-version: '1.0-SNAPSHOT'
+version: '1.0'
 main: org.xFeneq.ftpa.FancyTPA
 api-version: '1.19'
 authors: [ xFeneq ]
+description: Advanced TPA plugin with interactive chat and visual effects.
+
+commands:
+  tpa:
+    description: Send a teleport request to a player.
+    usage: /tpa <player>
+  tpahere:
+    description: Ask a player to teleport to you.
+    usage: /tpahere <player>
+  tpaccept:
+    description: Accept a pending teleport request.
+    usage: /tpaccept [player]
+  tpdeny:
+    description: Deny a pending teleport request.
+    usage: /tpdeny [player]
+  tp:
+    description: Admin teleport command with effects.
+    usage: /tp <player>
+  tphere:
+    description: Summon a player or everyone to your location.
+    usage: /tphere <player|all> [world]
