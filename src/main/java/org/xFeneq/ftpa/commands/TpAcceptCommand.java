@@ -1,4 +1,4 @@
-package org.xfeneq.ftpa.commands;
+package org.xFeneq.ftpa.commands;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -11,8 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.xfeneq.ftpa.FancyTPA;
-import org.xfeneq.ftpa.utils.ColorUtil;
+import org.xFeneq.ftpa.FancyTPA;
+import org.xFeneq.ftpa.utils.ColorUtil;
 
 import java.util.UUID;
 
