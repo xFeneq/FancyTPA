@@ -11,32 +11,49 @@ public final class FancyTPA extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Inicjalizacja konfiguracji
         saveDefaultConfig();
+
+        // Inicjalizacja managerów
         this.tpaManager = new TpaManager(this);
         this.combatManager = new CombatManager(this);
 
+        // Rejestracja eventów (CombatLog)
         getServer().getPluginManager().registerEvents(combatManager, this);
 
+        // Instancje executorów
+        PlayerCommands playerCommands = new PlayerCommands(this);
+        AdminCommands adminCommands = new AdminCommands(this);
         TpaTabCompleter tabCompleter = new TpaTabCompleter();
 
-        PlayerCommands playerCommands = new PlayerCommands(this);
-        getCommand("tpa").setExecutor(playerCommands);
-        getCommand("tpa").setTabCompleter(tabCompleter);
-        getCommand("tpahere").setExecutor(playerCommands);
-        getCommand("tpahere").setTabCompleter(tabCompleter);
-        getCommand("tpaccept").setExecutor(new TpAcceptCommand(this));
-        getCommand("tpdeny").setExecutor(new TpDenyCommand(this));
-        getCommand("back").setExecutor(new BackCommand(this));
+        // Rejestracja komendy głównej (Reload)
+        if (getCommand("ftpa") != null) {
+            getCommand("ftpa").setExecutor(new ReloadCommand(this));
+        }
 
-        AdminCommands adminCommands = new AdminCommands(this);
-        getCommand("tp").setExecutor(adminCommands);
-        getCommand("tp").setTabCompleter(tabCompleter);
-        getCommand("tphere").setExecutor(adminCommands);
-        getCommand("tphere").setTabCompleter(tabCompleter);
-        getCommand("tpall").setExecutor(adminCommands);
-        getCommand("tpall").setTabCompleter(tabCompleter);
+        // Rejestracja pozostałych komend z ich aliasami/nazwami z plugin.yml
+        registerCommand("tpa", playerCommands, tabCompleter);
+        registerCommand("tpahere", playerCommands, tabCompleter);
+        registerCommand("tpaccept", new TpAcceptCommand(this), null);
+        registerCommand("tpdeny", new TpDenyCommand(this), null);
+        registerCommand("back", new BackCommand(this), null);
+        registerCommand("tp", adminCommands, tabCompleter);
+        registerCommand("tphere", adminCommands, tabCompleter);
+        registerCommand("tpall", adminCommands, tabCompleter);
 
-        getLogger().info("FancyTPA v2.0 enabled!");
+        getLogger().info("========================================");
+        getLogger().info("FancyTPA v2.2 został pomyślnie włączony!");
+        getLogger().info("Autor: xFeneq");
+        getLogger().info("========================================");
+    }
+
+    private void registerCommand(String name, org.bukkit.command.CommandExecutor executor, org.bukkit.command.TabCompleter tab) {
+        if (getCommand(name) != null) {
+            getCommand(name).setExecutor(executor);
+            if (tab != null) {
+                getCommand(name).setTabCompleter(tab);
+            }
+        }
     }
 
     public TpaManager getTpaManager() { return tpaManager; }

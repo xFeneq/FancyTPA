@@ -3,25 +3,32 @@
 # ======================================================
 
 # ------------------------------------------------------
+# Command Aliases
+# Change the primary names of commands here.
+# Restart the server after changing these!
+# ------------------------------------------------------
+command-aliases:
+  tpa: "tpa"
+  tpahere: "tpahere"
+  tpaccept: "tpaccept"
+  tpdeny: "tpdeny"
+  back: "back"
+  tp: "tp"
+  tphere: "tphere"
+  tpall: "tpall"
+
+# ------------------------------------------------------
 # General Teleportation Settings
 # ------------------------------------------------------
 settings:
-  # Time in seconds before /tpa or /tpahere occurs
   teleport-delay: 5
-
-  # Time in seconds before /back teleportation occurs
   back-delay: 10
-
-  # Combat Tag duration in seconds (Command block after hitting/getting hit)
-  # This works with our internal system, no external plugins needed!
   combat-timer: 15
-
-  # Should the teleportation be cancelled if the player moves or gets hit?
+  request-expire: 30
   cancel-on-move: true
 
 # ------------------------------------------------------
 # Commands Toggle Section
-# Enable or disable specific features of the plugin
 # ------------------------------------------------------
 commands:
   tpa:
@@ -34,46 +41,37 @@ commands:
     enabled: true
   back:
     enabled: true
-  tp-admin: # Admin /tp, /tphere, and /tpall
+  tp-admin:
     enabled: true
 
 # ------------------------------------------------------
 # Permissions Configuration
 # ------------------------------------------------------
 permissions:
-  # Admin permissions
   admin-all: "ftpa.admin.*"
   admin-tp: "ftpa.admin.tp"
   admin-tphere: "ftpa.admin.tphere"
   admin-tpall: "ftpa.admin.tpall"
-
-  # Player permissions
   player-all: "ftpa.player.*"
   player-tpa: "ftpa.player.tpa"
   player-tpahere: "ftpa.player.tpahere"
   player-tpaccept: "ftpa.player.tpaccept"
   player-back: "ftpa.player.back"
-
-  # Bypass permission for Combat Tag
   combat-bypass: "fancytpa.bypass.combat"
 
 # ------------------------------------------------------
 # Visual and Sound Effects
 # ------------------------------------------------------
 effects:
-  # General toggle for all effects
   enabled: true
+  waiting-spiral: true
+  teleport-burst: true
 
-  # Enable the spinning circle effect during teleport delay
-  circle-enabled: true
-
-  # Sound played upon successful teleportation
-  # Use official Spigot names: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html
-  sound: "ENTITY_ENDERMAN_TELEPORT"
-
-  # Particle type used for general effects
-  # Use official Spigot names: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
-  particle-type: "PORTAL"
+  sound-teleport: "ENTITY_ENDERMAN_TELEPORT"
+  sound-countdown: "BLOCK_NOTE_BLOCK_CHIME"
+  particle-main: "PORTAL"
+  particle-secondary: "ENCHANTMENT_TABLE"
+  particle-burst: "DRAGON_BREATH"
   particle-amount: 50
 
 # ------------------------------------------------------
@@ -90,6 +88,10 @@ messages:
   teleport-cancelled: "&cTeleportation cancelled! You moved or entered combat."
   world-not-found: "&cWorld &f{world} &cnot found."
   no-back-location: "&cNo previous location found or it has expired."
+
+  # Expiry Messages
+  request-expired-target: "&cTeleport request from &f{player} &cexpired."
+  request-expired-sender: "&cYour teleport request to &f{player} &chas expired."
 
   # Success Messages
   request-sent: "&7Request sent to &f{player}&7."
@@ -110,7 +112,7 @@ messages:
   accept-hover: "&7Click to &aaccept &7teleport request"
   deny-hover: "&7Click to &cdeny &7teleport request"
 
-  # Ignore System Messages (/tpa ignore <player>)
+  # Ignore System
   ignore-added: "&aYou are now ignoring TPA requests from &f{player}&a."
   ignore-removed: "&aYou are no longer ignoring &f{player}&a."
   ignored-by-target: "&cYou cannot send requests to this player."

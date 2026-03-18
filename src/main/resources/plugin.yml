@@ -1,26 +1,62 @@
 name: FancyTPA
-version: '1.0'
+version: 1.0
 main: org.xFeneq.ftpa.FancyTPA
-api-version: '1.19'
-authors: [ xFeneq ]
-description: Advanced TPA plugin with interactive chat and visual effects.
-
+api-version: 1.19
 commands:
+  ftpa:
+    description: Main plugin command (reload).
+    permission: ftpa.admin.reload
+    aliases: [fancytpa]
   tpa:
-    description: Send a teleport request to a player.
-    usage: /tpa <player>
+    description: Send a teleport request.
+    permission: ftpa.player.tpa
   tpahere:
-    description: Ask a player to teleport to you.
-    usage: /tpahere <player>
+    description: Request player to teleport to you.
+    permission: ftpa.player.tpahere
   tpaccept:
-    description: Accept a pending teleport request.
-    usage: /tpaccept [player]
+    description: Accept teleport request.
+    permission: ftpa.player.tpaccept
   tpdeny:
-    description: Deny a pending teleport request.
-    usage: /tpdeny [player]
+    description: Deny teleport request.
+    permission: ftpa.player.tpdeny
+  back:
+    description: Return to previous location.
+    permission: ftpa.player.back
   tp:
-    description: Admin teleport command with effects.
-    usage: /tp <player>
+    description: Admin teleport command.
+    permission: ftpa.admin.tp
   tphere:
-    description: Summon a player or everyone to your location.
-    usage: /tphere <player|all> [world]
+    description: Teleport player to you.
+    permission: ftpa.admin.tphere
+  tpall:
+    description: Teleport everyone.
+    permission: ftpa.admin.tpall
+
+permissions:
+  ftpa.admin.reload:
+    description: Allows reloading config.
+    default: op
+  ftpa.player.tpa:
+    description: Allows TPA.
+    default: true
+  ftpa.player.tpahere:
+    description: Allows TPAHere.
+    default: true
+  ftpa.player.tpaccept:
+    description: Allows TPaccept.
+    default: true
+  ftpa.player.tpdeny:
+    description: Allows TPdeny.
+    default: true
+  ftpa.player.back:
+    description: Allows Back.
+    default: true
+  ftpa.admin.tp:
+    description: Admin TP.
+    default: op
+  ftpa.admin.tphere:
+    description: Admin TPHere.
+    default: op
+  ftpa.admin.tpall:
+    description: Admin TPAll.
+    default: op

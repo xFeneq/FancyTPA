@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -28,13 +29,39 @@ public class TpaManager {
     }
 
     public void sendTpaRequest(Player sender, Player target) {
-        tpaRequests.put(sender.getUniqueId(), target.getUniqueId());
+        UUID sId = sender.getUniqueId();
+        UUID tId = target.getUniqueId();
+
+        tpaRequests.put(sId, tId);
         sendInteractiveMessage(target, sender, "wants to teleport to you!");
+
+        // Expiry Mechanism
+        int expireTime = plugin.getConfig().getInt("settings.request-expire", 30);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (tpaRequests.containsKey(sId) && tpaRequests.get(sId).equals(tId)) {
+                tpaRequests.remove(sId);
+                sender.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.request-expired-sender").replace("{player}", target.getName())));
+                target.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.request-expired-target").replace("{player}", sender.getName())));
+            }
+        }, expireTime * 20L);
     }
 
     public void sendTpaHereRequest(Player sender, Player target) {
-        tpaHereRequests.put(sender.getUniqueId(), target.getUniqueId());
+        UUID sId = sender.getUniqueId();
+        UUID tId = target.getUniqueId();
+
+        tpaHereRequests.put(sId, tId);
         sendInteractiveMessage(target, sender, "wants you to teleport to them!");
+
+        // Expiry Mechanism
+        int expireTime = plugin.getConfig().getInt("settings.request-expire", 30);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (tpaHereRequests.containsKey(sId) && tpaHereRequests.get(sId).equals(tId)) {
+                tpaHereRequests.remove(sId);
+                sender.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.request-expired-sender").replace("{player}", target.getName())));
+                target.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.request-expired-target").replace("{player}", sender.getName())));
+            }
+        }, expireTime * 20L);
     }
 
     private void sendInteractiveMessage(Player target, Player sender, String text) {
@@ -61,16 +88,15 @@ public class TpaManager {
         target.sendMessage(footer);
     }
 
-    // Ignore System
     public boolean toggleIgnore(Player owner, Player target) {
         ignoreLists.putIfAbsent(owner.getUniqueId(), new HashSet<>());
         Set<UUID> ignored = ignoreLists.get(owner.getUniqueId());
         if (ignored.contains(target.getUniqueId())) {
             ignored.remove(target.getUniqueId());
-            return false; // unignored
+            return false;
         } else {
             ignored.add(target.getUniqueId());
-            return true; // ignored
+            return true;
         }
     }
 
@@ -78,7 +104,6 @@ public class TpaManager {
         return ignoreLists.containsKey(target.getUniqueId()) && ignoreLists.get(target.getUniqueId()).contains(sender.getUniqueId());
     }
 
-    // Task Management
     public void addActiveTask(Player player, BukkitTask task) {
         activeTasks.put(player.getUniqueId(), task);
     }
