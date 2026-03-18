@@ -1,4 +1,4 @@
-package org.xFeneq.ftpa;
+package org.xFeneq.ftpa.commands;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.entity.Player;
+import org.xFeneq.ftpa.FancyTPA;
 import org.xFeneq.ftpa.utils.ColorUtil;
 
 import java.util.HashMap;

@@ -5,7 +5,7 @@ import org.xFeneq.ftpa.commands.AdminCommands;
 import org.xFeneq.ftpa.commands.PlayerCommands;
 import org.xFeneq.ftpa.commands.TpAcceptCommand;
 import org.xFeneq.ftpa.commands.TpDenyCommand;
-import org.xFeneq.ftpa.TpaManager;
+import org.xFeneq.ftpa.commands.TpaManager;
 
 public final class FancyTPA extends JavaPlugin {
 
