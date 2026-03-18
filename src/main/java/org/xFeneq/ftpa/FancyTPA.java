@@ -11,27 +11,21 @@ public final class FancyTPA extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Inicjalizacja konfiguracji
         saveDefaultConfig();
 
-        // Inicjalizacja managerów
         this.tpaManager = new TpaManager(this);
         this.combatManager = new CombatManager(this);
 
-        // Rejestracja eventów (CombatLog)
         getServer().getPluginManager().registerEvents(combatManager, this);
 
-        // Instancje executorów
         PlayerCommands playerCommands = new PlayerCommands(this);
         AdminCommands adminCommands = new AdminCommands(this);
         TpaTabCompleter tabCompleter = new TpaTabCompleter();
 
-        // Rejestracja komendy głównej (Reload)
         if (getCommand("ftpa") != null) {
             getCommand("ftpa").setExecutor(new ReloadCommand(this));
         }
 
-        // Rejestracja pozostałych komend z ich aliasami/nazwami z plugin.yml
         registerCommand("tpa", playerCommands, tabCompleter);
         registerCommand("tpahere", playerCommands, tabCompleter);
         registerCommand("tpaccept", new TpAcceptCommand(this), null);
@@ -42,8 +36,8 @@ public final class FancyTPA extends JavaPlugin {
         registerCommand("tpall", adminCommands, tabCompleter);
 
         getLogger().info("========================================");
-        getLogger().info("FancyTPA v2.2 został pomyślnie włączony!");
-        getLogger().info("Autor: xFeneq");
+        getLogger().info("FancyTPA v2.2!");
+        getLogger().info("Author: xFeneq");
         getLogger().info("========================================");
     }
 

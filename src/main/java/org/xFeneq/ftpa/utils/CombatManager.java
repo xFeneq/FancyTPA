@@ -35,7 +35,6 @@ public class CombatManager implements Listener {
         if (player.hasPermission(plugin.getConfig().getString("permissions.combat-bypass", "fancytpa.bypass.combat"))) return;
         combatLog.put(player.getUniqueId(), System.currentTimeMillis());
 
-        // Przerwij aktywną teleportację
         if (plugin.getTpaManager().hasActiveTask(player)) {
             plugin.getTpaManager().cancelTask(player);
             player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.teleport-cancelled")));

@@ -35,7 +35,6 @@ public class TpaManager {
         tpaRequests.put(sId, tId);
         sendInteractiveMessage(target, sender, "wants to teleport to you!");
 
-        // Expiry Mechanism
         int expireTime = plugin.getConfig().getInt("settings.request-expire", 30);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (tpaRequests.containsKey(sId) && tpaRequests.get(sId).equals(tId)) {
@@ -53,7 +52,6 @@ public class TpaManager {
         tpaHereRequests.put(sId, tId);
         sendInteractiveMessage(target, sender, "wants you to teleport to them!");
 
-        // Expiry Mechanism
         int expireTime = plugin.getConfig().getInt("settings.request-expire", 30);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (tpaHereRequests.containsKey(sId) && tpaHereRequests.get(sId).equals(tId)) {

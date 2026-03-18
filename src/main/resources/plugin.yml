@@ -2,6 +2,7 @@ name: FancyTPA
 version: 1.0
 main: org.xFeneq.ftpa.FancyTPA
 api-version: 1.19
+authors: [ xFeneq ]
 commands:
   ftpa:
     description: Main plugin command (reload).

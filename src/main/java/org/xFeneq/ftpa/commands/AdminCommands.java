@@ -26,7 +26,6 @@ public class AdminCommands implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("tp")) {
             if (!player.hasPermission("ftpa.admin.tp")) return true;
 
-            // /tp <player>
             if (args.length == 1) {
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target == null) {
@@ -37,7 +36,6 @@ public class AdminCommands implements CommandExecutor {
                 player.sendMessage(ColorUtil.color(plugin.getConfig().getString("messages.admin-tp-success").replace("{target}", target.getName())));
                 return true;
             }
-            // /tp <player> <target>
             else if (args.length == 2) {
                 Player p1 = Bukkit.getPlayer(args[0]);
                 Player p2 = Bukkit.getPlayer(args[1]);
@@ -49,7 +47,6 @@ public class AdminCommands implements CommandExecutor {
                 player.sendMessage(ColorUtil.color("&aTeleported " + p1.getName() + " to " + p2.getName()));
                 return true;
             }
-            // /tp <x> <y> <z>
             else if (args.length == 3) {
                 Location loc = parseLocation(player.getLocation(), args[0], args[1], args[2]);
                 if (loc == null) {
@@ -60,7 +57,6 @@ public class AdminCommands implements CommandExecutor {
                 player.sendMessage(ColorUtil.color("&aTeleported to coordinates."));
                 return true;
             }
-            // /tp <player> <x> <y> <z>
             else if (args.length == 4) {
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target == null) {
@@ -93,7 +89,6 @@ public class AdminCommands implements CommandExecutor {
             Player destination = player;
             World sourceWorld = null;
 
-            // /tpall <nick>
             if (args.length >= 1) {
                 destination = Bukkit.getPlayer(args[0]);
                 if (destination == null) {
@@ -101,7 +96,6 @@ public class AdminCommands implements CommandExecutor {
                     return true;
                 }
             }
-            // /tpall <nick> <dimension>
             if (args.length == 2) {
                 sourceWorld = Bukkit.getWorld(args[1]);
                 if (sourceWorld == null) {
